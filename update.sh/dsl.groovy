@@ -16,7 +16,7 @@ for (repo in vars.repos) {
 				scm {
 					git {
             remote {
-              github('lanen/orchid-pipelines'),
+              github('lanen/orchid-pipelines')
               // credentials('evan-github')
             }
           }
