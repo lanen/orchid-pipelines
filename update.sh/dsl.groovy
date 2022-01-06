@@ -19,7 +19,7 @@ for (repo in vars.repos) {
               url('git@github.com:lanen/orchid-pipelines.git')
               credentials('evan-github')
             }
-				    branche {
+				    branch {
               repoMeta['branch-base']
             }
           }
