@@ -14,15 +14,7 @@ for (repo in vars.repos) {
 		definition {
 			cpsScm {
 				scm {
-					git {
-						remote {
-							url('https://github.com/lanen/orchid-pipelines.git')
-						}
-						branch('*/main')
-						extensions {
-							cleanAfterCheckout()
-						}
-					}
+					github('lanen/orchid-pipelines')
 					scriptPath(repoMeta['pipeline-script'])
 				}
 			}
