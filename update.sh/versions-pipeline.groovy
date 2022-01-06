@@ -7,8 +7,8 @@ def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
 	'https://github.com/lanen/orchid-pipeline.git', // repo
 	'main', // branch
-	null, // credentialsId
-	null, // node/label
+	'evan-github', // credentialsId
+  '', // node/label
 )
 def repo = env.JOB_BASE_NAME
 def repoMeta = vars.repoMeta(repo)
