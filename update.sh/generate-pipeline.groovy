@@ -6,7 +6,7 @@ properties([
 	]),
 ])
 
-node('master') {
+node('Built-In Node') {
 	stage('Checkout') {
 		checkout([
 			$class: 'GitSCM',
