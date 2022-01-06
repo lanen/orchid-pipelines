@@ -5,10 +5,10 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
-	'https://github.com/docker-library/oi-janky-groovy.git', // repo
-	'master', // branch
+	'https://github.com/lanen/orchid-pipeline.git', // repo
+	'main', // branch
 	null, // credentialsId
-	'master', // node/label
+	null, // node/label
 )
 def repo = env.JOB_BASE_NAME
 def repoMeta = vars.repoMeta(repo)
@@ -32,10 +32,11 @@ node {
 			changelog: false,
 			scm: [
 				$class: 'GitSCM',
-				userRemoteConfigs: [[
-					url: 'https://github.com/docker-library/official-images.git',
-				]],
-				branches: [[name: '*/master']],
+        userRemoteConfigs: [
+          [url: 'git@github.com:lanen/orchid-images.git',
+          credentialsId: 'evan-github']
+        ],
+				branches: [[name: '*/main']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',
@@ -90,7 +91,7 @@ node {
 		sh '''#!/usr/bin/env bash
 			set -Eeuo pipefail -x
 
-			docker build --pull --tag oisupport/update.sh 'https://github.com/docker-library/oi-janky-groovy.git#:update.sh'
+			docker build --pull --tag oisupport/update.sh 'https://github.com/lanen/orchid-pipeline.git#:update.sh'
 
 			# precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
 			bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
