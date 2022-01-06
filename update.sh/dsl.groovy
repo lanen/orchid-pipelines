@@ -19,7 +19,9 @@ for (repo in vars.repos) {
               url('git@github.com:lanen/orchid-pipelines.git')
               credentials('evan-github')
             }
-				    branches([repoMeta['branch-base']])
+				    branche {
+              repoMeta['branch-base']
+            }
           }
 					scriptPath(repoMeta['pipeline-script'])
 				}
