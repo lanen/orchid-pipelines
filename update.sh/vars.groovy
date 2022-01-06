@@ -7,7 +7,7 @@ def defaultRepoMeta = [
 	['env', '.+_VERSION'], // gawk regex, anchored
 	['otherEnvs', []],
 	['branch-base', 'main'], // branch to check out from
-	['branch-push', 'master'], // branch to push to
+	['branch-push', 'dev-*'], // branch to push to
 	['update-script', './update.sh'],
 ]
 def rawReposData = [

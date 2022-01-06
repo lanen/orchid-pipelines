@@ -55,7 +55,8 @@ node {
 			userRemoteConfigs: [[
 				name: 'origin',
 				url: repoMeta['url'],
-				credentialsId: 'docker-library-bot',
+        credentialsId: 'evan-github'
+				// credentialsId: 'docker-library-bot',
 			]],
 			branches: [
 				[name: '*/' + repoMeta['branch-push']],
