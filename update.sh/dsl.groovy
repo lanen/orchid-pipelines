@@ -16,8 +16,8 @@ for (repo in vars.repos) {
 				scm {
 					git {
             remote {
-              github('lanen/orchid-pipelines')
-              // credentials('evan-github')
+              url('git@github.com:lanen/orchid-pipelines.git')
+              credentials('evan-github')
             }
           }
 					scriptPath(repoMeta['pipeline-script'])
