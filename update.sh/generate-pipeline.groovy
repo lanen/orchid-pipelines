@@ -11,7 +11,7 @@ node {
 		checkout([
 			$class: 'GitSCM',
 			userRemoteConfigs: [
-				[url: 'https://github.com/lanen/orchid-images.git'],
+				[url: 'https://github.com/lanen/orchid-pipelines.git'],
 			],
 			branches: [
 				[name: '*/main'],
