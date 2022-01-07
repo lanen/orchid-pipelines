@@ -7,7 +7,7 @@ def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
 	'https://github.com/lanen/orchid-pipelines.git', // repo
 	'main', // branch
-	'evan-github', // credentialsId
+	'orchid-pipeline-bot', // credentialsId
   '', // node/label
 )
 def repo = env.JOB_BASE_NAME
@@ -91,7 +91,7 @@ node {
 		sh '''#!/usr/bin/env bash
 			set -Eeuo pipefail -x
 
-			docker build --pull --tag oisupport/update.sh 'https://github.com/lanen/orchid-pipeline.git#:update.sh'
+			docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipeline.git#:update.sh'
 
 			# precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
 			bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
