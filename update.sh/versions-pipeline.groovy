@@ -87,7 +87,7 @@ node {
 				'''
 			}
 		}
-    withCredentials([string(credentialsId: 'orchid-pipeline-bot')]) {
+    sshagent(['orchid-pipeline-bot']) {
       sh '''#!/usr/bin/env bash
         set -Eeuo pipefail -x
 
