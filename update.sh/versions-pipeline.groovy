@@ -95,7 +95,7 @@ node {
           docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
 
           # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
-          bashbrew --arch amd64 from --uniq --apply-constraints orchid-wordpress:linux > /dev/null
+          bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
         '''
       }
 
