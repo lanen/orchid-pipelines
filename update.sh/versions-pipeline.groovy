@@ -88,18 +88,18 @@ node {
 			}
 		}
     sshagent(['orchid-pipeline-bot']) {
-      ansiColor("xterm") {
+      ansiColor('xterm') {
         sh '''#!/usr/bin/env bash
           set -Eeuo pipefail -x
 
           docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
 
           # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
-          /usr/local/bin/bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
+          bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
         '''
       }
 
-    }
+    }  
 
 	}
 
@@ -179,7 +179,7 @@ node {
 									> "$BASHBREW_LIBRARY/$repo"
 								git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
 
-								/usr/local/bin/bashbrew cat -f '{{ range .Entries }}{{ $.DockerFroms . | join "\\n" }}{{ "\\n" }}{{ end }}' "$repo" \\
+								bashbrew cat -f '{{ range .Entries }}{{ $.DockerFroms . | join "\\n" }}{{ "\\n" }}{{ end }}' "$repo" \\
 									| sort -u \\
 									| grep -vE '^(scratch|mcr.microsoft.com/windows/(nanoserver|servercore):.*|'"$repo"':.*)$' \\
 									| xargs -rtn1 docker pull \\
@@ -187,8 +187,8 @@ node {
 
 								images="$(bashbrew --namespace '' list --build-order --uniq "$repo")"
 								for image in $images; do
-									/usr/local/bin/bashbrew --namespace '' build "$image" # have to build/tag in the unprefixed namespace in case we have interdependent images
-									/usr/local/bin/bashbrew build "$image" # (this will tag from the bashbrew/cache directly)
+									bashbrew --namespace '' build "$image" # have to build/tag in the unprefixed namespace in case we have interdependent images
+									bashbrew build "$image" # (this will tag from the bashbrew/cache directly)
 								done
 							'''
 						}
@@ -198,7 +198,7 @@ node {
 				stage('Test ' + version) { if (didChange) {
 					timeout(time: 1, unit: 'HOURS') {
 						retry(3) {
-							sh '/usr/local/bin/bashbrew list --apply-constraints --uniq "$repo" | xargs -rt "$TEST_RUN_SH"'
+							sh 'bashbrew list --apply-constraints --uniq "$repo" | xargs -rt "$TEST_RUN_SH"'
 						}
 					}
 				} }
@@ -225,7 +225,7 @@ node {
 					./generate-stackbrew-library.sh \\
 					> "$BASHBREW_LIBRARY/$repo"
 				git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
-				/usr/local/bin/bashbrew from --uniq "$repo"
+				bashbrew from --uniq "$repo"
 
 				../oi/naughty-from.sh "$repo"
 				../oi/naughty-constraints.sh "$repo"
