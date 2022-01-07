@@ -174,7 +174,7 @@ node {
 							sh '''
 								# force our new commits into bashbrew
 								user="$(id -u):$(id -g)"
-								docker run --init --rm --user "$user" --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
+								docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
 									./generate-stackbrew-library.sh "$version" \\
 									> "$BASHBREW_LIBRARY/$repo"
 								git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
@@ -221,7 +221,7 @@ node {
 		stage('Validate') {
 			sh '''
 				user="$(id -u):$(id -g)"
-				docker run --init --rm --user "$user" --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
+				docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
 					./generate-stackbrew-library.sh \\
 					> "$BASHBREW_LIBRARY/$repo"
 				git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
@@ -281,7 +281,7 @@ node {
 				(
 					cd repo
 					user="$(id -u):$(id -g)"
-					docker run --init --rm --user "$user" --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
+					docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
 						./generate-stackbrew-library.sh \\
 						> "$BASHBREW_LIBRARY/$repo"
 				)
