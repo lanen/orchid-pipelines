@@ -91,7 +91,7 @@ node {
 		sh '''#!/usr/bin/env bash
 			set -Eeuo pipefail -x
 
-			docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipeline.git#:update.sh'
+			docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#:update.sh'
 
 			# precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
 			bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
