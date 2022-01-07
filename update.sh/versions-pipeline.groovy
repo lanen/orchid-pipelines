@@ -137,7 +137,7 @@ node {
 						componentsBefore="$(version_components)"
 
 						user="$(id -u):$(id -g)"
-						docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" oisupport/update.sh \\
+						docker run --init --rm --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" oisupport/update.sh \\
 							./update.sh "$version"
 
 						componentsAfter="$(version_components)"
@@ -221,14 +221,14 @@ node {
 		stage('Validate') {
 			sh '''
 				user="$(id -u):$(id -g)"
-				docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
+				docker run --init --rm --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
 					./generate-stackbrew-library.sh \\
 					> "$BASHBREW_LIBRARY/$repo"
 				git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
 				bashbrew from --uniq "$repo"
 
-				../oi/naughty-from.sh "$repo"
-				../oi/naughty-constraints.sh "$repo"
+				#../oi/naughty-from.sh "$repo"
+				#../oi/naughty-constraints.sh "$repo"
 			'''
 		}
 
@@ -281,7 +281,7 @@ node {
 				(
 					cd repo
 					user="$(id -u):$(id -g)"
-					docker run --init --rm  --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
+					docker run --init --rm --mount "type=bind,src=$PWD,dst=$PWD,ro" --workdir "$PWD" oisupport/update.sh \\
 						./generate-stackbrew-library.sh \\
 						> "$BASHBREW_LIBRARY/$repo"
 				)
