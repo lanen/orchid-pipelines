@@ -102,7 +102,7 @@ node {
     // }  
 
 	}
-
+  
 	ansiColor('xterm') { dir('repo') {
 		def initialCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
@@ -118,45 +118,48 @@ node {
 
 			try {
 				stage('Update ' + version) {
-					sh '''#!/usr/bin/env bash
-						set -Eeuo pipefail -x
+          sshagent(['orchid-pipeline-bot']) { 
+            sh '''#!/usr/bin/env bash
+              set -Eeuo pipefail -x
 
-						# gather a list of this version's components first so we can diff it later and generate a useful commit message ("Update 1.2 to 1.2.4", "Update 3.4 to openssl 1.1.1g", etc)
-						version_components() {
-							jq -r '
-								.[env.version] // {} | [
-									.version // empty,
-									(
-										to_entries[]
-										| select(.value | type == "object" and has("version"))
-										| .key + " " + .value.version
-									)
-								] | join("\n")
-							' versions.json
-						}
-						componentsBefore="$(version_components)"
+              # gather a list of this version's components first so we can diff it later and generate a useful commit message ("Update 1.2 to 1.2.4", "Update 3.4 to openssl 1.1.1g", etc)
+              version_components() {
+                jq -r '
+                  .[env.version] // {} | [
+                    .version // empty,
+                    (
+                      to_entries[]
+                      | select(.value | type == "object" and has("version"))
+                      | .key + " " + .value.version
+                    )
+                  ] | join("\n")
+                ' versions.json
+              }
+              componentsBefore="$(version_components)"
 
-						user="$(id -u):$(id -g)"
-						docker run --init --rm --user "$user" --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" oisupport/update.sh \\
-							./update.sh "$version"
+              user="$(id -u):$(id -g)"
+              docker run --init --rm --user "$user" --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" oisupport/update.sh \\
+                ./update.sh "$version"
 
-						componentsAfter="$(version_components)"
-						componentsChanged="$(comm -13 <(echo "$componentsBefore") <(echo "$componentsAfter"))"
+              componentsAfter="$(version_components)"
+              componentsChanged="$(comm -13 <(echo "$componentsBefore") <(echo "$componentsAfter"))"
 
-						# Example generated commit messages:
-						#   Update 3.7
-						#   Update 3.7 to 3.7.14
-						#   Update 3.7 to 3.7.14, openssl 1.1.1g
-						#   Update 3.7 to openssl 1.1.1g
-						# etc.
-						commitMessage="Update $version"
-						if [ -n "$componentsChanged" ]; then
-							components="$(jq <<<"$componentsChanged" -rRs 'rtrimstr("\n") | split("\n") | join(", ")')"
-							commitMessage+=" to $components"
-						fi
-						git add -A . || :
-						git commit -m "$commitMessage" || :
-					'''
+              # Example generated commit messages:
+              #   Update 3.7
+              #   Update 3.7 to 3.7.14
+              #   Update 3.7 to 3.7.14, openssl 1.1.1g
+              #   Update 3.7 to openssl 1.1.1g
+              # etc.
+              commitMessage="Update $version"
+              if [ -n "$componentsChanged" ]; then
+                components="$(jq <<<"$componentsChanged" -rRs 'rtrimstr("\n") | split("\n") | join(", ")')"
+                commitMessage+=" to $components"
+              fi
+              git add -A . || :
+              git commit -m "$commitMessage" || :
+            '''
+          }
+					
 				}
 
 				def newCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
