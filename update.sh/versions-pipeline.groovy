@@ -17,7 +17,7 @@ node {
 	env.repo = repo
 	env.BRANCH_BASE = repoMeta['branch-base']
 	env.BRANCH_PUSH = repoMeta['branch-push']
-
+  // 环境变量的用途 see https://github.com/docker-library/bashbrew 
 	env.BASHBREW_CACHE = workspace + '/bashbrew-cache'
 	env.BASHBREW_LIBRARY = workspace + '/oi/library'
 	env.BASHBREW_NAMESPACE = 'update.sh'
@@ -95,7 +95,7 @@ node {
           docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
 
           # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
-          bashbrew --arch amd64 from --uniq --apply-constraints hello-world:linux > /dev/null
+          bashbrew --arch amd64 from --uniq --apply-constraints orchid-wordpress:linux > /dev/null
         '''
       }
 
