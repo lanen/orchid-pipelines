@@ -98,7 +98,8 @@ node {
     //       bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
     //     '''
     //   }
-    }  
+
+    // }  
 
 	}
 
