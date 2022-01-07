@@ -5,8 +5,8 @@ def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
 	'https://github.com/lanen/orchid-pipelines.git', // repo
 	'main', // branch
-	null, // credentialsId
-	'master', // node/label
+	'orchid-pipeline-bot', // credentialsId
+	'', // node/label
 )
 def repo = env.JOB_BASE_NAME
 def repoMeta = vars.repoMeta(repo)
@@ -25,10 +25,11 @@ node {
 			changelog: false,
 			scm: [
 				$class: 'GitSCM',
-				userRemoteConfigs: [[
-					url: 'https://github.com/docker-library/official-images.git',
-				]],
-				branches: [[name: '*/master']],
+        userRemoteConfigs: [
+          [url: 'git@github.com:lanen/orchid-images.git',
+          credentialsId: 'orchid-pipeline-bot']
+        ],
+				branches: [[name: '*/main']],
 				extensions: [
 					[
 						$class: 'CleanCheckout',

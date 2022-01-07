@@ -12,7 +12,7 @@ node {
 			$class: 'GitSCM',
 			userRemoteConfigs: [
 				[url: 'git@github.com:lanen/orchid-pipelines.git',
-        credentialsId: 'evan-github']
+        credentialsId: 'orchid-pipeline-bot']
 			],
 			branches: [
 				[name: '*/main'],

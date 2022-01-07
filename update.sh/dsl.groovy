@@ -2,7 +2,7 @@ def vars = (new GroovyShell()).evaluate(readFileFromWorkspace('orchid-pipelines/
 
 for (repo in vars.repos) {
 	def repoMeta = vars.repoMeta(repo)
-
+  def branchName = '*/' + repoMeta['branch-base']
 	pipelineJob(repo) {
 		logRotator { daysToKeep(4) }
 		// TODO concurrentBuild(false)
@@ -17,9 +17,9 @@ for (repo in vars.repos) {
 					git {
             remote {
               url('git@github.com:lanen/orchid-pipelines.git')
-              credentials('evan-github')
+              credentials('orchid-pipeline-bot')
             }
-				    branch(repoMeta['branch-base']) 
+				    branch(branchName) 
           }
 					scriptPath(repoMeta['pipeline-script'])
 				}

@@ -5,7 +5,7 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
-	'https://github.com/lanen/orchid-pipeline.git', // repo
+	'https://github.com/lanen/orchid-pipelines.git', // repo
 	'main', // branch
 	'evan-github', // credentialsId
   '', // node/label
@@ -34,7 +34,7 @@ node {
 				$class: 'GitSCM',
         userRemoteConfigs: [
           [url: 'git@github.com:lanen/orchid-images.git',
-          credentialsId: 'evan-github']
+          credentialsId: 'orchid-pipeline-bot']
         ],
 				branches: [[name: '*/main']],
 				extensions: [
@@ -55,8 +55,7 @@ node {
 			userRemoteConfigs: [[
 				name: 'origin',
 				url: repoMeta['url'],
-        credentialsId: 'evan-github'
-				// credentialsId: 'docker-library-bot',
+        credentialsId: 'orchid-pipeline-bot'
 			]],
 			branches: [
 				[name: '*/' + repoMeta['branch-push']],
@@ -75,14 +74,14 @@ node {
 			submoduleCfg: [],
 		])
 		sh '''
-			git -C oi config user.name 'Docker Library Bot'
-			git -C oi config user.email 'github+dockerlibrarybot@infosiftr.com'
-			git -C repo config user.name 'Docker Library Bot'
-			git -C repo config user.email 'github+dockerlibrarybot@infosiftr.com'
+			git -C oi config user.name 'Orchid Pipeline Bot'
+			git -C oi config user.email 'cppmain@gmail.com'
+			git -C repo config user.name 'Orchid Pipeline Bot'
+			git -C repo config user.email 'cppmain@gmail.com'
 		'''
 
 		if (repoMeta['branch-base'] != repoMeta['branch-push']) {
-			sshagent(['docker-library-bot']) {
+			sshagent(['orchid-pipeline-bot']) {
 				sh '''
 					git -C repo pull --rebase origin "$BRANCH_BASE"
 				'''
