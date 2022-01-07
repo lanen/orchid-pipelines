@@ -14,7 +14,7 @@ def rawReposData = [
 	['orchid-wordpress', [
 		'pipeline-script': 'update.sh/versions-pipeline.groovy',
 	]],
-  ['orchid-java', [
+  ['orchid-hello-world', [
 		'pipeline-script': 'update.sh/versions-pipeline.groovy',
 	]]
 ]

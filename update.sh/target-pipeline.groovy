@@ -3,7 +3,7 @@
 // we can't use "load()" here because we don't have a file context (or a real checkout of "oi-janky-groovy" -- the pipeline plugin hides that checkout from the actual pipeline execution)
 def vars = fileLoader.fromGit(
 	'update.sh/vars.groovy', // script
-	'https://github.com/lanen/orchid-pipelines.git', // repo
+	'git@github.com:lanen/orchid-pipelines.git', // repo
 	'main', // branch
 	'orchid-pipeline-bot', // credentialsId
 	'', // node/label
@@ -47,7 +47,7 @@ node {
 			$class: 'GitSCM',
 			userRemoteConfigs: [[
 				name: 'origin',
-				url: repoMeta['url'],
+				url: repoMe.dockerignore['url'],
 				credentialsId: 'docker-library-bot',
 			]],
 			branches: [[name: '*/' + repoMeta['branch-push']]],
