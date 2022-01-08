@@ -87,19 +87,19 @@ node {
 				'''
 			}
 		}
-    // sshagent(['orchid-pipeline-bot']) {
-    //   ansiColor('xterm') {
-    //     sh '''#!/usr/bin/env bash
-    //       set -Eeuo pipefail -x
+    sshagent(['orchid-pipeline-bot']) {
+      ansiColor('xterm') {
+        sh '''#!/usr/bin/env bash
+          set -Eeuo pipefail -x
 
-    //       docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
+          docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
 
-    //       # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
-    //       bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
-    //     '''
-    //   }
+          # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
+          bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
+        '''
+      }
 
-    // }  
+    }  
 
 	}
   
