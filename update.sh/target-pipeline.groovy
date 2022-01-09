@@ -48,7 +48,7 @@ node {
 			userRemoteConfigs: [[
 				name: 'origin',
 				url: repoMe.dockerignore['url'],
-				credentialsId: 'docker-library-bot',
+				credentialsId: 'orchid-pipeline-bot',
 			]],
 			branches: [[name: '*/' + repoMeta['branch-push']]],
 			extensions: [
@@ -82,7 +82,7 @@ node {
 		'''
 
 		if (repoMeta['branch-base'] != repoMeta['branch-push']) {
-			sshagent(['docker-library-bot']) {
+			sshagent(['orchid-pipeline-bot']) {
 				sh '''
 					git -C repo pull --rebase origin "$BRANCH_BASE"
 				'''
@@ -272,7 +272,7 @@ node {
 			}
 
 			stage('Push') {
-				sshagent(['docker-library-bot']) {
+				sshagent(['orchid-pipeline-bot']) {
 					sh 'git push $([ "$BRANCH_BASE" = "$BRANCH_PUSH" ] || echo --force) origin "HEAD:$BRANCH_PUSH"'
 				}
 			}
@@ -282,7 +282,7 @@ node {
 	} }
 
 	stage('Stage PR') {
-		sshagent(['docker-library-bot']) {
+		sshagent(['orchid-pipeline-bot']) {
 			sh '''#!/usr/bin/env bash
 				set -Eeuo pipefail
 				set -x

@@ -234,7 +234,7 @@ node {
 
 		def newCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 		stage('Push') { if (newCommit != initialCommit) {
-			sshagent(['evan-github']) {
+			sshagent(['orchid-pipeline-bot']) {
         sh 'git remote -v'
 				sh 'git push $([ "$BRANCH_BASE" = "$BRANCH_PUSH" ] || echo --force) origin "HEAD:$BRANCH_PUSH"'
 			}
@@ -242,7 +242,7 @@ node {
 	} }
 
 	stage('Stage PR') {
-		sshagent(['docker-library-bot']) {
+		sshagent(['orchid-pipeline-bot']) {
 			sh '''#!/usr/bin/env bash
 				set -Eeuo pipefail
 				set -x
