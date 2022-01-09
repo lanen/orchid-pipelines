@@ -227,14 +227,15 @@ node {
 				git -C "$BASHBREW_CACHE/git" fetch "$PWD" HEAD:
 				bashbrew from --uniq "$repo"
 
-				#../oi/naughty-from.sh "$repo"
-				#../oi/naughty-constraints.sh "$repo"
+				../oi/naughty-from.sh "$repo"
+				../oi/naughty-constraints.sh "$repo"
 			'''
 		}
 
 		def newCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 		stage('Push') { if (newCommit != initialCommit) {
 			sshagent(['docker-library-bot']) {
+        sh 'git remote -v'
 				sh 'git push $([ "$BRANCH_BASE" = "$BRANCH_PUSH" ] || echo --force) origin "HEAD:$BRANCH_PUSH"'
 			}
 		} }
