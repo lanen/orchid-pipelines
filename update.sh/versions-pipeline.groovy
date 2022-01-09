@@ -234,7 +234,7 @@ node {
 
 		def newCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 		stage('Push') { if (newCommit != initialCommit) {
-			sshagent(['docker-library-bot']) {
+			sshagent(['evan-github']) {
         sh 'git remote -v'
 				sh 'git push $([ "$BRANCH_BASE" = "$BRANCH_PUSH" ] || echo --force) origin "HEAD:$BRANCH_PUSH"'
 			}
