@@ -95,7 +95,7 @@ node {
           docker build --pull --tag oisupport/update.sh 'git@github.com:lanen/orchid-pipelines.git#main:update.sh'
 
           # precreate the bashbrew cache (so we can get creative with "$BASHBREW_CACHE/git" later)
-          bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
+          time bashbrew --arch amd64 from --uniq --apply-constraints orchid-hello-world:linux > /dev/null
         '''
       }
 
@@ -117,48 +117,50 @@ node {
 			def commit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
 			try {
-				stage('Update ' + version) {
-					sh '''#!/usr/bin/env bash
-						set -Eeuo pipefail -x
+				stage('Update ' + version) { 
+          sshagent(['orchid-pipeline-bot']) {
+            sh '''#!/usr/bin/env bash
+              set -Eeuo pipefail -x
 
-						# gather a list of this version's components first so we can diff it later and generate a useful commit message ("Update 1.2 to 1.2.4", "Update 3.4 to openssl 1.1.1g", etc)
-						version_components() {
-							jq -r '
-								.[env.version] // {} | [
-									.version // empty,
-									(
-										to_entries[]
-										| select(.value | type == "object" and has("version"))
-										| .key + " " + .value.version
-									)
-								] | join("\n")
-							' versions.json
-						}
-						componentsBefore="$(version_components)"
+              # gather a list of this version's components first so we can diff it later and generate a useful commit message ("Update 1.2 to 1.2.4", "Update 3.4 to openssl 1.1.1g", etc)
+              version_components() {
+                jq -r '
+                  .[env.version] // {} | [
+                    .version // empty,
+                    (
+                      to_entries[]
+                      | select(.value | type == "object" and has("version"))
+                      | .key + " " + .value.version
+                    )
+                  ] | join("\n")
+                ' versions.json
+              }
+              componentsBefore="$(version_components)"
 
-						user="$(id -u):$(id -g)"
-						docker run --init --rm --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" oisupport/update.sh \\
-							./update.sh "$version"
+              user="$(id -u):$(id -g)"
+              ssh_dir=$(dirname $SSH_AUTH_SOCK)
+              docker run --init --rm --mount "type=bind,src=$ssh_dir,dst=$ssh_dir" --mount "type=bind,src=$PWD,dst=$PWD" --workdir "$PWD" -e SSH_AUTH_SOCK=$SSH_AUTH_SOCK oisupport/update.sh \\
+                ./update.sh "$version"
 
-						componentsAfter="$(version_components)"
-						componentsChanged="$(comm -13 <(echo "$componentsBefore") <(echo "$componentsAfter"))"
+              componentsAfter="$(version_components)"
+              componentsChanged="$(comm -13 <(echo "$componentsBefore") <(echo "$componentsAfter"))"
 
-						# Example generated commit messages:
-						#   Update 3.7
-						#   Update 3.7 to 3.7.14
-						#   Update 3.7 to 3.7.14, openssl 1.1.1g
-						#   Update 3.7 to openssl 1.1.1g
-						# etc.
-						commitMessage="Update $version"
-						if [ -n "$componentsChanged" ]; then
-							components="$(jq <<<"$componentsChanged" -rRs 'rtrimstr("\n") | split("\n") | join(", ")')"
-							commitMessage+=" to $components"
-						fi
-						git add -A . || :
-						git commit -m "$commitMessage" || :
-					'''
-				}
-
+              # Example generated commit messages:
+              #   Update 3.7
+              #   Update 3.7 to 3.7.14
+              #   Update 3.7 to 3.7.14, openssl 1.1.1g
+              #   Update 3.7 to openssl 1.1.1g
+              # etc.
+              commitMessage="Update $version"
+              if [ -n "$componentsChanged" ]; then
+                components="$(jq <<<"$componentsChanged" -rRs 'rtrimstr("\n") | split("\n") | join(", ")')"
+                commitMessage+=" to $components"
+              fi
+              git add -A . || :
+              git commit -m "$commitMessage" || :
+            '''
+          }
+        }
 				def newCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 				def didChange = (newCommit != commit)
 

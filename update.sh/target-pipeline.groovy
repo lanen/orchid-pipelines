@@ -71,7 +71,7 @@ node {
 			git -C repo config user.name 'Docker Library Bot'
 			git -C repo config user.email 'github+dockerlibrarybot@infosiftr.com'
 
-			docker build --pull --tag oisupport/update.sh 'https://github.com/docker-library/oi-janky-groovy.git#:update.sh'
+			docker build --pull --tag oisupport/update.sh 'https://github.com.cnpmjs.org/docker-library/oi-janky-groovy.git#:update.sh'
 
 			# prefill the bashbrew cache
 			cd repo
