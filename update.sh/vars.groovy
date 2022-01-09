@@ -2,7 +2,7 @@
 // tl;dr, iterating over Maps in pipeline groovy is pretty broken in real-world use
 def defaultRepoMeta = [
 	['url', 'git@github.com:lanen/%%REPO%%.git'],
-	['oi-fork', 'git@github.com:docker-library-bot/official-images.git'],
+	['oi-fork', 'git@github.com:lanen/orchid-images-bot.git'],
 	['pipeline-script', 'update.sh/target-pipeline.groovy'],
 	['env', '.+_VERSION'], // gawk regex, anchored
 	['otherEnvs', []],
